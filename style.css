@@ -35,10 +35,25 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 36px;
+    font-size: 0;  /* 隐藏数字 */
     font-weight: bold;
     color: #776e65;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
+
+.tile-2 { background-image: url('images/corn_kernel.png'); }
+.tile-4 { background-image: url('images/four_corn_kernels.png'); }
+.tile-8 { background-image: url('images/corn_cob.png'); }
+.tile-16 { background-image: url('images/four_corn_cobs.png'); }
+.tile-32 { background-image: url('images/popcorn_kernel.png'); }
+.tile-64 { background-image: url('images/four_popcorn_kernels.png'); }
+.tile-128 { background-image: url('images/popcorn_bag.png'); }
+.tile-256 { background-image: url('images/popcorn_bucket.png'); }
+.tile-512 { background-image: url('images/i_love_you.png'); }
+.tile-1024 { background-image: url('images/1024.png'); }
+.tile-2048 { background-image: url('images/2048.png'); }
 
 #new-game {
     padding: 10px 20px;

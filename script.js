@@ -36,7 +36,11 @@ function updateBoard() {
         for (let j = 0; j < size; j++) {
             const tile = document.createElement('div');
             tile.className = 'tile';
-            tile.textContent = board[i][j] || '';
+            if (board[i][j] !== 0) {
+                tile.classList.add(`tile-${board[i][j]}`);
+                // 移除数字显示
+                // tile.textContent = board[i][j];
+            }
             gameBoard.appendChild(tile);
         }
     }
@@ -76,7 +80,15 @@ function moveLeft() {
             if (row[j] === row[j + 1]) {
                 row[j] *= 2;
                 if (row[j] === 64) {
-                    setTimeout(() => showCustomAlert("玉米好棒"), 100);
+                    setTimeout(() => showCustomAlert("玉米好棒", 64), 100);
+                } else if (row[j] === 512) {
+                    setTimeout(() => showCustomAlert("玉米太棒了", 512), 100);
+                } else if (row[j] === 2048) {
+                    setTimeout(() => showCustomAlert("爱你哦", 2048), 100);
+                } else if (row[j] > 64 && row[j] < 512) {
+                    playAudio('yumijiayou-audio');
+                } else if (row[j] > 512 && row[j] < 2048) {
+                    playAudio('yumijiayou-audio');
                 }
                 row[j + 1] = 0;
                 moved = true;
@@ -102,7 +114,15 @@ function moveRight() {
             if (row[j] === row[j - 1]) {
                 row[j] *= 2;
                 if (row[j] === 64) {
-                    setTimeout(() => showCustomAlert("玉米好棒"), 100);
+                    setTimeout(() => showCustomAlert("玉米好棒", 64), 100);
+                } else if (row[j] === 512) {
+                    setTimeout(() => showCustomAlert("玉米太棒了", 512), 100);
+                } else if (row[j] === 2048) {
+                    setTimeout(() => showCustomAlert("爱你哦", 2048), 100);
+                } else if (row[j] > 64 && row[j] < 512) {
+                    playAudio('yumijiayou-audio');
+                } else if (row[j] > 512 && row[j] < 2048) {
+                    playAudio('yumijiayou-audio');
                 }
                 row[j - 1] = 0;
                 moved = true;
@@ -132,7 +152,15 @@ function moveUp() {
             if (column[i] === column[i + 1]) {
                 column[i] *= 2;
                 if (column[i] === 64) {
-                    setTimeout(() => showCustomAlert("玉米好棒"), 100);
+                    setTimeout(() => showCustomAlert("玉米好棒", 64), 100);
+                } else if (column[i] === 512) {
+                    setTimeout(() => showCustomAlert("玉米太棒了", 512), 100);
+                } else if (column[i] === 2048) {
+                    setTimeout(() => showCustomAlert("爱你哦", 2048), 100);
+                } else if (column[i] > 64 && column[i] < 512) {
+                    playAudio('yumijiayou-audio');
+                } else if (column[i] > 512 && column[i] < 2048) {
+                    playAudio('yumijiayou-audio');
                 }
                 column[i + 1] = 0;
                 moved = true;
@@ -164,7 +192,15 @@ function moveDown() {
             if (column[i] === column[i - 1]) {
                 column[i] *= 2;
                 if (column[i] === 64) {
-                    setTimeout(() => showCustomAlert("玉米好棒"), 100);
+                    setTimeout(() => showCustomAlert("玉米好棒", 64), 100);
+                } else if (column[i] === 512) {
+                    setTimeout(() => showCustomAlert("玉米太棒了", 512), 100);
+                } else if (column[i] === 2048) {
+                    setTimeout(() => showCustomAlert("爱你哦", 2048), 100);
+                } else if (column[i] > 64 && column[i] < 512) {
+                    playAudio('yumijiayou-audio');
+                } else if (column[i] > 512 && column[i] < 2048) {
+                    playAudio('yumijiayou-audio');
                 }
                 column[i - 1] = 0;
                 moved = true;
@@ -273,11 +309,19 @@ function initializeGame() {
     disableScroll();
 }
 
-function showCustomAlert(message) {
+function showCustomAlert(message, value) {
     const alertElement = document.getElementById('custom-alert');
     const messageElement = document.getElementById('alert-message');
     const closeButton = document.getElementById('alert-close');
-    const audio = document.getElementById('celebration-audio');
+    let audio;
+
+    if (value === 64) {
+        audio = document.getElementById('celebration-audio-64');
+    } else if (value === 512) {
+        audio = document.getElementById('celebration-audio-512');
+    } else if (value === 2048) {
+        audio = document.getElementById('memeda-audio');
+    }
 
     messageElement.textContent = message;
     alertElement.style.display = 'flex';
@@ -285,8 +329,10 @@ function showCustomAlert(message) {
     closeButton.onclick = function() {
         alertElement.style.display = 'none';
         stopFireworks();
-        audio.pause();
-        audio.currentTime = 0;
+        if (audio) {
+            audio.pause();
+            audio.currentTime = 0;
+        }
     };
 
     // 添加庆祝效果
@@ -298,24 +344,29 @@ function showCustomAlert(message) {
     startFireworks();
 
     // 播放庆祝音效
-    audio.play();
-    setTimeout(() => {
-        audio.pause();
-        audio.currentTime = 0;
-    }, 3000);  // 与烟花特效持续时间相同
+    if (audio) {
+        audio.play();
+        setTimeout(() => {
+            audio.pause();
+            audio.currentTime = 0;
+        }, 3000);  // 与烟花特效持续时间相同
+    }
 }
 
 function startFireworks() {
-    const fireworksInterval = setInterval(createFirework, 100);  // 增加烟花创建频率
+    const fireworksInterval = setInterval(createFirework, 100);  // 增加烟花创建频
     setTimeout(() => clearInterval(fireworksInterval), 3000);
 }
 
 function stopFireworks() {
     const fireworksContainer = document.getElementById('fireworks-container');
     fireworksContainer.innerHTML = '';
-    const audio = document.getElementById('celebration-audio');
-    audio.pause();
-    audio.currentTime = 0;
+    const audio64 = document.getElementById('celebration-audio-64');
+    const audio512 = document.getElementById('celebration-audio-512');
+    audio64.pause();
+    audio64.currentTime = 0;
+    audio512.pause();
+    audio512.currentTime = 0;
 }
 
 function createFirework() {
@@ -366,6 +417,11 @@ function createCelebrationParticle() {
     setTimeout(() => {
         document.body.removeChild(particle);
     }, 1000);
+}
+
+function playAudio(audioId) {
+    const audio = document.getElementById(audioId);
+    audio.play();
 }
 
 initializeGame();
